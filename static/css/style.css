@@ -1,0 +1,30 @@
+.gradient-custom-2 {
+    /* fallback for old browsers */
+    background: #fccb90;
+
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #07610c, rgb(7, 97, 12), rgb(5, 87, 9), rgb(1, 53, 4));
+}
+
+@media (min-width: 768px) {
+    .gradient-form {
+        height: 100vh !important;
+    }
+}
+@media (min-width: 769px) {
+    .gradient-custom-2 {
+        border-top-right-radius: .3rem;
+        border-bottom-right-radius: .3rem;
+    }
+}
+
+#Navbar {
+    border-radius: 0;
+    border-bottom: #013504 solid 2px;
+    z-index: 2;
+}
+
+.nav-link:hover {
+    color: #ffffff;
+    border-bottom: #EEEEEEFF solid 2px;
+}
