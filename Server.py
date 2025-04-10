@@ -1,8 +1,9 @@
+import datetime
 import sqlite3
 import re
-from string import punctuation
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import hashlib
+from datetime import datetime
 
 Server = Flask(__name__)
 Server.secret_key = 'LXtDCX7aMQG1e3tqDPDJTVxXD'
@@ -10,13 +11,51 @@ Server.secret_key = 'LXtDCX7aMQG1e3tqDPDJTVxXD'
 def init_db():
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS users (
+
+    # Users table
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS users (
         email TEXT PRIMARY KEY,
         password TEXT NOT NULL,
         fullname TEXT NOT NULL
     )''')
+
+    # Carbon Footprint Entries
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS carbon_footprint (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_email TEXT,
+        date TEXT,
+        emissions REAL,
+        notes TEXT,
+        FOREIGN KEY(user_email) REFERENCES users(email)
+    )''')
+
+    # Energy Usage
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS energy_usage (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_email TEXT,
+        month TEXT,
+        usage REAL,
+        difference REAL,
+        FOREIGN KEY(user_email) REFERENCES users(email)
+    )''')
+
+    # Consultations
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS consultations (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_email TEXT,
+        date TEXT,
+        time TEXT,
+        topic TEXT,
+        FOREIGN KEY(user_email) REFERENCES users(email)
+    )''')
+
     conn.commit()
     conn.close()
+
 
 # Register a new user
 @Server.route("/register", methods=["POST"])
@@ -83,6 +122,78 @@ def login():
     else:
         return jsonify({"success": False, "error": "Password is incorrect."}), 401
 
+@Server.route('/submit_carbon', methods=['POST'])
+def submit_carbon():
+    if 'UserData' not in session:
+        return redirect(url_for('LoginPage'))
+
+    email = session['UserData'][0]
+    data = request.get_json()
+
+    date = data.get('date')
+    emissions = data.get('emissions')
+    notes = data.get('notes')
+
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO carbon_footprint (user_email, date, emissions, notes)
+        VALUES (?, ?, ?, ?)
+    ''', (email, date, emissions, notes))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"success": True})
+
+@Server.route('/consultationsAPI', methods=['POST'])
+def Consultations():
+    if 'UserData' not in session:
+        return redirect(url_for('LoginPage'))
+
+    email = session['UserData'][0]
+    data = request.get_json()
+
+    date_str = data.get('date')
+    time = data.get('time')
+    topic = data.get('topic')
+
+    try:
+        consultation_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+        if consultation_date < datetime.today().date():
+            return jsonify({"success": False, "error": "Date must be today or in the future."})
+    except ValueError:
+        return jsonify({"success": False, "error": "Invalid date format."})
+
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO consultations (user_email, date, time, topic)
+        VALUES (?, ?, ?, ?)
+    ''', (email, date_str, time, topic))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"success": True})
+
+
+@Server.route('/consultationsAPI', methods=['GET'])
+def get_consultations():
+    if 'UserData' not in session:
+        return jsonify({"success": False, "message": "Not logged in"}), 401
+
+    email = session['UserData'][0]
+
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT date, time, topic FROM consultations WHERE user_email = ?", (email,))
+    rows = cursor.fetchall()
+    conn.close()
+
+    consultations = [{"date": r[0], "time": r[1], "topic": r[2]} for r in rows]
+    print({"success": True, "consultations": consultations})
+    return jsonify({"success": True, "consultations": consultations})
+
+
 @Server.route("/logout")
 def logout():
     if 'UserData' in session:
@@ -112,11 +223,36 @@ def LoginPage():
         return redirect(url_for('HomePage'))
     return render_template("Login.html")
 
-@Server.route("/dashboard")
+@Server.route('/dashboard')
 def DashboardPage():
     if 'UserData' not in session:
-        return redirect(url_for('HomePage'))
-    return "Dashboard Page"
+        return redirect(url_for('LoginPage'))
+
+    email = session["UserData"][0]
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT date, emissions, notes FROM carbon_footprint WHERE user_email = ?', (email,))
+    carbon_results = [
+        {"date": row[0], "emissions": row[1], "notes": row[2]}
+        for row in cursor.fetchall()
+    ]
+
+    cursor.execute('SELECT month, usage, difference FROM energy_usage WHERE user_email = ? ORDER BY id DESC LIMIT 1', (email,))
+    row = cursor.fetchone()
+    energy_usage = {"last_month": row[1], "difference": row[2]} if row else {"last_month": 0, "difference": 0}
+
+    # Load consultations
+    cursor.execute('SELECT date, time, topic FROM consultations WHERE user_email = ?', (email,))
+    consultations = [
+        {"date": row[0], "time": row[1], "topic": row[2]}
+        for row in cursor.fetchall()
+    ]
+
+    conn.close()
+
+    return render_template("Dashboard.html",user=session["UserData"],carbon_results=carbon_results,energy_usage=energy_usage,consultations=consultations)
+
 
 @Server.route("/account")
 def AccountSettingsPage():
@@ -126,7 +262,9 @@ def AccountSettingsPage():
 
 @Server.route("/carbonfootprint")
 def CarbonFootPrintPage():
-    return "Carbon footprint calculator"
+    if 'UserData' not in session:
+        return redirect(url_for('HomePage'))
+    return render_template("CarbonFootPrint.html", user=session["UserData"])
 
 @Server.route("/energyusage")
 def EnergyUsagePage():
@@ -140,9 +278,9 @@ def BlogPage():
 def ConsultationsPage():
     if 'UserData' not in session:
         return redirect(url_for('HomePage'))
-    return "Consultations"
+    return render_template("Consultations.html", user=session["UserData"])
 
 init_db()
 
 if __name__ == "__main__":
-    Server.run(debug=True)
+    Server.run(host='0.0.0.0', port=5000, debug=True)

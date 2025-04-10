@@ -1,9 +1,9 @@
 .gradient-custom-2 {
-    /* fallback for old browsers */
-    background: #fccb90;
+    background: linear-gradient(#07610c, rgb(7, 97, 12), rgb(5, 87, 9));
+}
 
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #07610c, rgb(7, 97, 12), rgb(5, 87, 9), rgb(1, 53, 4));
+.global-Gradient {
+    background: linear-gradient(#07610c, rgb(7, 97, 12), rgb(5, 87, 9));
 }
 
 @media (min-width: 768px) {
@@ -27,4 +27,35 @@
 .nav-link:hover {
     color: #ffffff;
     border-bottom: #EEEEEEFF solid 2px;
+}
+
+body {
+    background: #EEEEEEFF !important;
+}
+
+.MainText {
+    color: #07610CFF;
+}
+
+.BorderTop {
+    border-top: 10px solid #07610C;
+}
+
+/* For full page scroll - hides scrollbars but allows scrolling */
+html, body {
+    overflow: auto;        /* Make sure scrolling still works */
+    -ms-overflow-style: none;  /* Hide scrollbar in IE and Edge */
+    scrollbar-width: none;     /* Hide scrollbar in Firefox */
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none;         /* Hide scrollbar in Chrome, Safari, Opera */
+}
+
+.NextSection {
+    margin-top: 56px !important;
+    min-height: calc(100vh - 56px) !important;
+    justify-content: center;
+    text-align: center;
+    align-content: center;
 }

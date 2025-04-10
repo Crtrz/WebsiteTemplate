@@ -1,135 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Bootstrap 5 Example</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <title>Home Page - Rolsa Technologies</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/static/css/CarbonFootPrint.css" rel="stylesheet">
+  <link href="/static/css/Style.css" rel="stylesheet">
 
-    <link href="/static/css/Login.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.4/components/heroes/hero-1/assets/css/hero-1.css">
 </head>
 <body>
 
-<section class="h-100 gradient-form" style="background-color: #eee;">
-    <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-xl-10">
-                <div class="card rounded-3 text-black">
-                    <div class="row g-0">
-                        <div class="col-lg-6">
-                            <div class="card-body p-md-5 mx-md-4">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark gradient-custom-2 fixed-top" id="Navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{ url_for('HomePage') }}">
+      <img src="/static/Logo.png" alt="Logo" style="width: 40px; height: 40px;">
+      Rolsa Technologies
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navabar-toggler-icon"></span>
+    </button>
 
-                                <div class="text-center">
-                                    <img src="/static/Logo.png" class="img-fluid rounded-circle mb-4" alt="..."
-                                         style="width: 185px;" alt="logo">
-                                    <h4 class="mt-1 mb-5 pb-1">Rolsa Technologies</h4>
-                                </div>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item ms-3">
+          <a class="nav-link" aria-current="page" href="{{ url_for('HomePage') }}">Home</a>
+        </li>
+        <li class="nav-item ms-3">
+          <a class="nav-link active" href="{{ url_for('CarbonFootPrintPage') }}">Carbon Footprint</a>
+        </li>
+        <li class="nav-item ms-3">
+          <a class="nav-link" href="{{ url_for('EnergyUsagePage') }}">Energy Usage</a>
+        </li>
+        <li class="nav-item ms-3">
+          <a class="nav-link" href="{{ url_for('BlogPage') }}">Blog</a>
+        </li>
+        <li class="nav-item ms-3">
+          <a class="nav-link" href="{{ url_for('ConsultationsPage') }}">Consultations</a>
+        </li>
+      </ul>
 
-
-                                <div hidden id="error-message" class="text-center alert alert-warning" role="alert">
-                                    Invalid Email or password
-                                </div>
-
-                                <form id="LoginForm">
-
-                                    <p>Please login to your account</p>
-
-                                    <div data-mdb-input-init class="form-outline mb-4">
-                                        <input type="email" id="Email" class="form-control" placeholder="email address" required/>
-                                    </div>
-
-                                    <div data-mdb-input-init class="form-outline mb-4">
-                                        <input type="password" id="Password" class="form-control" placeholder="password" required/>
-                                    </div>
-
-                                    <div class="text-center">
-                                        <a href="#" class="text-muted" onclick="ShowRestPasswordForm(); return false;">Forgot password?</a>
-
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                        <label class="form-check-label" for="flexCheckChecked">
-                                            Remember me
-                                        </label>
-                                    </div>
-
-                                    <div class="text-center pt-1 mb-5 pb-1" style="width: 100%;">
-                                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-success btn-block fa-lg mb-3" type="button" onclick="loginUser()">Log in</button>
-                                    </div>
-
-                                    <div class="d-flex align-items-center justify-content-center pb-4">
-                                        <p class="mb-0 me-2">Don't have an account?</p>
-                                        <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-success" onclick="ShowRegisterForm()">Create new</button>
-                                    </div>
-
-                                </form>
-
-                                <form id="RegisterForm" hidden="hidden">
-
-                                    <p>Please register to continue</p>
-
-                                    <div data-mdb-input-init class="form-outline mb-4">
-                                        <input type="text" id="name" class="form-control"
-                                               placeholder="full name" required/>
-                                    </div>
-
-                                    <div data-mdb-input-init class="form-outline mb-4">
-                                        <input type="email" id="RegisterEmail" class="form-control"
-                                               placeholder="email address" required/>
-                                    </div>
-
-                                    <div data-mdb-input-init class="form-outline mb-4">
-                                        <input type="password" id="RegisterPassword" class="form-control" placeholder="password" required/>
-                                    </div>
-
-                                    <div data-mdb-input-init class="form-outline mb-4">
-                                        <input type="password" id="confirmPassword" class="form-control" placeholder="confirm password" required/>
-                                    </div>
-
-                                    <div class="text-center pt-1 mb-5 pb-1" style="width: 100%;">
-                                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-success btn-block fa-lg mb-3" type="button" onclick="registerUser()">Sign Up</button>
-                                    </div>
-
-                                    <div class="d-flex align-items-center justify-content-center pb-4">
-                                        <p class="mb-0 me-2">Already have an account?</p>
-                                        <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-success" onclick="ShowLoginForm()">Login</button>
-                                    </div>
-                                </form>
-
-                                <form id="ResetPasswordForm" hidden="hidden">
-                                    <p>Reset password</p>
-
-                                    <div data-mdb-input-init class="form-outline mb-4">
-                                        <input type="email" id="form2Example11" class="form-control"
-                                               placeholder="email address" />
-                                    </div>
-
-                                    <div class="text-center pt-1 mb-5 pb-1" style="width: 100%;">
-                                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-success btn-block fa-lg mb-3" type="button">Send email</button>
-                                    </div>
-
-                                    <div class="d-flex align-items-center justify-content-center pb-4">
-                                        <p class="mb-0 me-2">Don't have an account?</p>
-                                        <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-success" onclick="ShowRegisterForm()">Create new</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-
-                        <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
-                            <div class="text-white px-3 py-4 p-md-5 mx-md-4">
-                                <h4 class="mb-4">We are more than just a company</h4>
-                                <p class="small mb-0">We provide cutting-edge solar energy solutions and carbon footprint tracking tools to help individuals and businesses embrace sustainability. Sign up today and take the first step toward a cleaner, greener future..</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item ms-3">
+          <a class="nav-link" href="{{ url_for('DashboardPage') }}">Dashboard</a>
+        </li>
+        <li class="nav-item ms-3">
+          <a class="nav-link" href="{{ url_for('AccountSettingsPage') }}">Account Settings</a>
+        </li>
+        <li class="nav-item ms-3">
+          <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+        </li>
+      </ul>
     </div>
+  </div>
+</nav>
+
+<section id="carbon-footprint-calculator" class="NextSection container-fluid py-5">
+  <div class="row">
+
+    <div class="col-12 col-md-10 col-lg-8 mx-auto text-start text-black card p-5" id="Questioner">
+      <h1 class="display-1">Carbon Footprint Calculator</h1>
+      <h1 class="display-5" id="SectionText">Energy Consumption</h1>
+
+      <small class="text-muted mb-4 text-success-emphasis" id="Step-Counter"></small>
+      <div class="progress mb-5 bg-secondary-subtle w-100" id="CarbonFootprintProgressBar">
+        <div class="progress-bar global-Gradient rounded" role="progressbar" id="QuizProgress" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+
+      <div id="Question1" hidden="hidden">
+        <div class="mb-3">
+          <label for="electricityUsage" class="form-label display-6 fw-medium">How much electricity does your household consume monthly? (kWh)</label><br>
+          <label for="electricityUsage" class="form-label">The average single-person household uses 150-250 kWh/month</label>
+
+          <select class="form-control" id="electricityUsage" required>
+            <option value="" disabled selected>How much electricity does your household consume monthly? (kWh)</option>
+            <option>Less than 100 kWh</option>
+            <option>100-249 kWh</option>
+            <option>250-399 kWh</option>
+            <option>400-599 kWh</option>
+            <option>600-900 kWh</option>
+            <option>More than 1000 kWh</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="Question2" hidden="hidden">
+        <div class="mb-3">
+          <label for="naturalGas" class="form-label display-6 fw-medium">Do you use natural gas for heating?</label><br>
+
+          <select class="form-control" id="naturalGas" required>
+            <option value="" disabled selected>Do you use natural gas for heating?</option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="Question3" hidden="hidden">
+        <div class="mb-3">
+          <label for="DrivenDistance" class="form-label display-6 fw-medium">How many miles do you drive per week?</label><br>
+
+          <select class="form-control" id="DrivenDistance" required>
+            <option value="" disabled selected>How many miles do you drive per week?</option>
+            <option>I  don't drive</option>
+            <option>Less than 50 miles</option>
+            <option>50–99 miles</option>
+            <option>100–149 miles</option>
+            <option>150–199 miles</option>
+            <option>200–299 miles</option>
+            <option>More than 300 miles</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="Question4" hidden="hidden">
+        <div class="mb-3">
+          <label for="BeefConsumption" class="form-label display-6 fw-medium">How many kilograms of beef do you consume per week?</label><br>
+          <input type="number" class="form-control" id="BeefConsumption" min="0" required placeholder="How many kilograms of beef do you consume per week?">
+        </div>
+      </div>
+
+      <div id="Question5" hidden="hidden">
+        <div class="mb-3">
+          <label for="RecyclePercentage" class="form-label display-6 fw-medium">How much of your waste is recycled (Percentage)?</label><br>
+          <input type="number" class="form-control" id="RecyclePercentage" min="0" max="100" required placeholder="Percentage of waste recycled (Percentage)">
+        </div>
+      </div>
+
+      <div id="Question6" hidden="hidden">
+        <div class="mb-3">
+          <label for="WaterUsage" class="form-label display-6 fw-medium">How many liters of water do you use per day?</label><br>
+          <input type="number" class="form-control" id="WaterUsage" min="0" required placeholder="Liters of water used per day">
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center mt-1 gap-2">
+        <button class="btn btn-success" id="PreviousPage" hidden="hidden">Previous</button>
+        <button class="btn btn-success" id="NextPage">Next</button>
+
+        <button class="btn btn-success" id="Complete" hidden="hidden">Results</button>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-10 col-lg-8 mx-auto text-start text-black card p-5" id="Results" hidden="hidden">
+      <div class="mt-5 p-4 bg-light rounded border shadow">
+        <h2 class="text-success">Your Carbon Footprint Results</h2>
+        <p class="lead">Here is a summary of your weekly carbon emissions:</p>
+
+        <ul class="list-group mb-3" id="ResultsList"></ul>
+
+        <div class="progress mb-3" style="height: 30px;">
+          <div id="ResultsBar" class="progress-bar" role="progressbar" style="width: 0%;">
+            <span id="ResultsLevel" class="fw-bold"></span>
+          </div>
+        </div>
+
+        <p class="text-muted"><small>This result is an estimate. Try to reduce emissions by using less energy, driving less, and recycling more.</small></p>
+      </div>
+
+      <div class="d-flex justify-content-center mt-1 gap-2">
+        <button class="btn btn-success" id="Retry">Recalculate Carbon Footprint</button>
+      </div>
+    </div>
+  </div>
 </section>
 
-<script src="../static/js/Login.js"></script>
 
+<footer class="bg-dark text-white text-center text-lg-start">
+  <div class="container p-4">
+    <div class="row">
+      <div class="col-lg-4 col-md-6 mb-4">
+        <h5>Rolsa Technologies</h5>
+        <p>Leading the way in green energy solutions. Helping homes and businesses build a cleaner tomorrow.</p>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4">
+        <h5>Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ url_for('HomePage') }}" class="text-white text-decoration-none">Home</a></li>
+          <li><a href="{{ url_for('CarbonFootPrintPage') }}" class="text-white text-decoration-none">Carbon Footprint</a></li>
+          <li><a href="{{ url_for('EnergyUsagePage') }}" class="text-white text-decoration-none">Energy Usage</a></li>
+          <li><a href="{{ url_for('ConsultationsPage') }}" class="text-white text-decoration-none">Consultations</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4">
+        <h5>Contact Us</h5>
+        <p>Email: support@rolsa.com</p>
+        <p>Phone: +123 456 7890</p>
+      </div>
+    </div>
+  </div>
+  <div class="text-center p-3 bg-secondary">
+    © 2025 Rolsa Technologies. All rights reserved.
+  </div>
+</footer>
+
+  <script src="/static/js/CarbonFootPrint.js"></script>
+  <script src="https://unpkg.com/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

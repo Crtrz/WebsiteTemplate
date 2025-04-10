@@ -1,1 +1,2 @@
 HeroImage = https://unsplash.com/photos/white-windmill-during-daytime-JRUVbgJJTBM
+Leaf = https://www.freepik.com/free-vector/multiple-differnt-green-leaves_35514639.htm#fromView=keyword&page=1&position=21&uuid=1303afbf-3581-4d91-94c7-d30b1562d5d8&query=Leaf+Cartoon
